@@ -30,6 +30,7 @@ public class Movies {
     private static MongoDatabase database = null;
 
     public Movies() {
+        System.setProperty("java.naming.provider.url","dns://8.8.8.8");
         createDatabaseConnection();
     }
 
