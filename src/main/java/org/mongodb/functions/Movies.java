@@ -24,9 +24,26 @@ public class Movies {
      * 2. curl {your host}/api/GetMovies?name=HTTP%20Query
      */
 
-    private static String MONGODB_CONNECTION_URI = System.getenv("MONGODB_URI");
-    private static String DATABASE_NAME = "sample_mflix";
-    private static String COLLECTION_NAME = "movies";
+    private static final String MONGODB_CONNECTION_URI = System.getenv("MONGODB_URI");
+    private static final String DATABASE_NAME = "sample_mflix";
+    private static final String COLLECTION_NAME = "movies";
+    private static MongoDatabase database = null;
+
+    public Movies() {
+        createDatabaseConnection();
+    }
+
+    private static MongoDatabase createDatabaseConnection() {
+        if (database == null) {
+            try {
+                MongoClient client = MongoClients.create(MONGODB_CONNECTION_URI);
+                database = client.getDatabase(DATABASE_NAME);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return database;
+    }
 
     @FunctionName("GetMoviesCount")
     public HttpResponseMessage getMoviesCount(
@@ -36,12 +53,10 @@ public class Movies {
             ) HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
 
-        try (MongoClient client = MongoClients.create(MONGODB_CONNECTION_URI)) {
-            MongoDatabase database = client.getDatabase(DATABASE_NAME);
+        if (database != null) {
             long totalRecords = database.getCollection(COLLECTION_NAME).countDocuments();
             return request.createResponseBuilder(HttpStatus.OK).body("Total Records, " + totalRecords + " - At:" + System.currentTimeMillis()).build();
-        } catch (Exception e) {
-            context.getLogger().info("Error occurred in Get Movie out" + e.getLocalizedMessage());
+        } else {
             return request.createResponseBuilder(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -54,26 +69,16 @@ public class Movies {
             ) HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
 
-        try (MongoClient client = MongoClients.create(MONGODB_CONNECTION_URI)) {
-            MongoDatabase database = client.getDatabase(DATABASE_NAME);
-            MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
+        MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
+        final String query = request.getQueryParameters().get("year");
+        final String year = request.getBody().orElse(query);
 
-            final String query = request.getQueryParameters().get("year");
-            final String year = request.getBody().orElse(query);
-
-            if (year != null) {
-                Bson filter = Filters.eq("year", Integer.valueOf(year));
-                Document result = collection.find(filter).first();
-                return request.createResponseBuilder(HttpStatus.OK).body(result.toJson()).build();
-            } else {
-                return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Year missing").build();
-            }
-
-        } catch (Exception e) {
-            context.getLogger().info("Error occurred in GetMoviesById" + e.getLocalizedMessage());
-            return request.createResponseBuilder(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        if (year != null) {
+            Bson filter = Filters.eq("year", Integer.valueOf(year));
+            Document result = collection.find(filter).first();
+            return request.createResponseBuilder(HttpStatus.OK).body(result.toJson()).build();
+        } else {
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Year missing").build();
         }
     }
-
-
 }
