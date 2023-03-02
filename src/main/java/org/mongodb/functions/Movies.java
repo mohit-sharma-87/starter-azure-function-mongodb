@@ -26,7 +26,7 @@ public class Movies {
      * 2. curl {your host}/api/GetMovies?name=HTTP%20Query
      */
 
-    private static final String MONGODB_CONNECTION_URI = "mongodb+srv://admin:i2st9GdAN2oIQ0Aw@cluster0.nqthlww.mongodb.net/?retryWrites=true&w=majority";
+    private static final String MONGODB_CONNECTION_URI = System.getenv("MONGODB_URI");
     private static final String DATABASE_NAME = "sample_mflix";
     private static final String COLLECTION_NAME = "movies";
     private static MongoDatabase database = null;
@@ -74,12 +74,11 @@ public class Movies {
             ) HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
 
-        final String query = request.getQueryParameters().get("year");
-        final String year = request.getBody().orElse(query);
+        final int yearRequestParam = valueOf(request.getQueryParameters().get("year"));
         MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
 
-        if (database != null && year != null) {
-            Bson filter = Filters.eq("year", valueOf(year));
+        if (database != null) {
+            Bson filter = Filters.eq("year", yearRequestParam);
             Document result = collection.find(filter).first();
             return request.createResponseBuilder(HttpStatus.OK).body(result.toJson()).build();
         } else {
