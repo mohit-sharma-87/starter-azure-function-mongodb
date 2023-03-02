@@ -14,6 +14,8 @@ import org.bson.conversions.Bson;
 
 import java.util.Optional;
 
+import static java.lang.Integer.valueOf;
+
 /**
  * Azure Functions with HTTP Trigger.
  */
@@ -24,13 +26,15 @@ public class Movies {
      * 2. curl {your host}/api/GetMovies?name=HTTP%20Query
      */
 
-    private static final String MONGODB_CONNECTION_URI = System.getenv("MONGODB_URI");
+    private static final String MONGODB_CONNECTION_URI = "mongodb+srv://admin:i2st9GdAN2oIQ0Aw@cluster0.nqthlww.mongodb.net/?retryWrites=true&w=majority";
     private static final String DATABASE_NAME = "sample_mflix";
     private static final String COLLECTION_NAME = "movies";
     private static MongoDatabase database = null;
 
+
     public Movies() {
-        System.setProperty("java.naming.provider.url","dns://8.8.8.8");
+        //Quick fix for Window VM in Azure.
+        System.setProperty("java.naming.provider.url", "dns://8.8.8.8");
         createDatabaseConnection();
     }
 
@@ -40,7 +44,7 @@ public class Movies {
                 MongoClient client = MongoClients.create(MONGODB_CONNECTION_URI);
                 database = client.getDatabase(DATABASE_NAME);
             } catch (Exception e) {
-                return null;
+                throw new IllegalStateException("Error in creating MongoDB client");
             }
         }
         return database;
@@ -63,19 +67,19 @@ public class Movies {
     }
 
     @FunctionName("GetMovies")
-    public HttpResponseMessage getMoviesById(
+    public HttpResponseMessage getMoviesByYear(
             @HttpTrigger(name = "req",
                     methods = {HttpMethod.GET},
                     authLevel = AuthorizationLevel.ANONYMOUS
             ) HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
 
-        MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
         final String query = request.getQueryParameters().get("year");
         final String year = request.getBody().orElse(query);
+        MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
 
-        if (year != null) {
-            Bson filter = Filters.eq("year", Integer.valueOf(year));
+        if (database != null && year != null) {
+            Bson filter = Filters.eq("year", valueOf(year));
             Document result = collection.find(filter).first();
             return request.createResponseBuilder(HttpStatus.OK).body(result.toJson()).build();
         } else {
