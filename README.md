@@ -293,7 +293,69 @@ Again we would copy this `URL` and validate using postman.
 
 ![cloud postman validation](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/cloud_deploy_7_408716b6a0.png)
 
+With this we have successfully connected our first function with
+[MongoDB Atlas](https://www.mongodb.com/atlas/database). Now lets take to next level, we would
+create another function with return a movie document released in a particular year which would 
+be an user input. 
 
+So lets added the boiler code 
 
+```java
+
+@FunctionName("getMoviesByYear")
+public HttpResponseMessage getMoviesByYear(
+      @HttpTrigger(name = "req",
+              methods = {HttpMethod.GET},
+              authLevel = AuthorizationLevel.ANONYMOUS
+      ) HttpRequestMessage<Optional<String>> request,
+      final ExecutionContext context) {
+
+}
+```
+Now to capture user input, year movie was released. This can be passed to query to gather 
+information from the collection.   
+
+```java
+     final int yearRequestParam = valueOf(request.getQueryParameters().get("year"));
+```
+
+```java
+Bson filter = Filters.eq("year", yearRequestParam);
+Document result = collection.find(filter).first();
+```
+And the updated code is 
+
+```java
+@FunctionName("getMoviesByYear")
+public HttpResponseMessage getMoviesByYear(
+      @HttpTrigger(name = "req",
+              methods = {HttpMethod.GET},
+              authLevel = AuthorizationLevel.ANONYMOUS
+      ) HttpRequestMessage<Optional<String>> request,
+      final ExecutionContext context) {
+
+  final int yearRequestParam = valueOf(request.getQueryParameters().get("year"));
+  MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
+
+  if (database != null) {
+      Bson filter = Filters.eq("year", yearRequestParam);
+      Document result = collection.find(filter).first();
+      return request.createResponseBuilder(HttpStatus.OK).body(result.toJson()).build();
+  } else {
+      return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Year missing").build();
+  }
+}
+```
+
+Now lets validate this against postman. 
+
+![get movies by year output](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Screenshot_2023_03_07_at_22_54_16_81d42caa18.png)
 
 ## Summary
+Thank you for reading, hopefully you find this article informative! The complete source code of
+the app can be found on [GitHub](https://github.com/mongodb-developer/starter-azure-function-mongodb).
+
+If you have any queries or comments, you can share them on the [MongoDB forum](https://www.mongodb.com/community/forums/) 
+or tweet me [@codeWithMohit](https://twitter.com/codeWithMohit).
+
+
