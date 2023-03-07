@@ -50,7 +50,7 @@ public class Movies {
         return database;
     }
 
-    @FunctionName("GetMoviesCount")
+    @FunctionName("getMoviesCount")
     public HttpResponseMessage getMoviesCount(
             @HttpTrigger(name = "req",
                     methods = {HttpMethod.GET},
@@ -66,7 +66,7 @@ public class Movies {
         }
     }
 
-    @FunctionName("GetMovies")
+    @FunctionName("getMoviesByYear")
     public HttpResponseMessage getMoviesByYear(
             @HttpTrigger(name = "req",
                     methods = {HttpMethod.GET},
