@@ -95,13 +95,14 @@ function which we would do in the next section we need to understand how to conn
 function with a database, as logic operate over data and databases hold the data.
 
 Similar to serverless function, let use a database which is on cloud has the ability scale up
-and down with the needs. Therefore, we would be using [MongoDB Atlas]() which is a document based
-cloud database.
+and down with the needs. Therefore, we would be using [MongoDB Atlas](https://www.mongodb.com/atlas/database)
+which is a document based cloud database.
 
 ### Setting up Atlas account
 
-Creating an [Atlas account]() is very straightforward, which is free forever and perfect to validate
-any MVP project idea, but if you need a guide you can follow this [documentation]().
+Creating an [Atlas account](https://www.mongodb.com/cloud/atlas/register) is very straightforward, which is free forever and perfect to validate
+any MVP project idea, but if you need a guide you can follow this
+[documentation](https://www.mongodb.com/docs/atlas/getting-started/).
 
 ### Whitelisting Azure function IP address in Atlas
 
@@ -110,7 +111,7 @@ connection request, this is essential as it prevent unwanted access to our datab
 Atlas would get all the connect request from Azure function so let whitelist those IP addresses.
 
 Azure function uses a range of IP addresses instead of single address for outbound request, so
-let's add this range to Atlas. To get the range of IP address open your [Azure account]() and
+let's add this range to Atlas. To get the range of IP address open your [Azure account](https://azure.microsoft.com/en-us/free/) and
 search networking inside your Azure Virtual machine and copy the Outbound addresses from
 Outbound traffic.
 
@@ -119,8 +120,8 @@ Outbound traffic.
 ### Installing dependency to interact with Atlas
 
 There are various ways of connecting/interacting with Atlas, since we are building a service
-using serverless function in Java my preference would be use [MongoDB Java driver](). So let add
-the dependency for the driver in the `build.gradle` file.
+using serverless function in Java my preference would be use [MongoDB Java driver](https://www.mongodb.com/docs/drivers/java-drivers/)
+. So let add the dependency for the driver in the `build.gradle` file.
 
 ```groovy
 dependencies {
@@ -190,9 +191,9 @@ public class Movies {
 ```
 
 Now to connect with MongoDB Atlas using Java driver we first need a connection string that can
-found when we press connect to our cluster on our [Atlas account](), you can also refer to this
-[documentation](https://www.mongodb.com/docs/guides/atlas/connection-string/). Using this
-connection string we can create an instance of `MongoClients` which can be used to open connection
+found when we press connect to our cluster on our [Atlas account](https://account.mongodb.com/account/login?_ga=2.197766374.89042088.1678230173-713092659.1675961706)
+, you can also refer to this [documentation](https://www.mongodb.com/docs/guides/atlas/connection-string/)
+. Using this connection string we can create an instance of `MongoClients` which can be used to open connection
 with the database.
 
 ```java
