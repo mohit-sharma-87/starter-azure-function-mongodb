@@ -4,35 +4,40 @@
 > when you are getting started with [Azure function](https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview) 
 > in Java.
 
+## Introduction
+Cloud computing is one of the most discussed topics in the tech industry with its ability to scale up and down infrastructure instantly, serverless
+apps are just a few benefits to start with. In this article, we are going write the function as a service(FaaS)e i.e. serverless function that 
+would interact with data via a database to produce meaningful results.    
+
 ## Prerequisite
 
 1. [Microsoft Azure](https://azure.microsoft.com/en-us) account that we will be
    using for running and deploying our serverless function, if you don't have you can set it up for
    free.
-2. [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register) account, if you don't
-   have you can set it up for free. //TODO: Add utm params for content
+
+2. [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register) account, which is cloud based document database and can be set up for free. 
+
 3. [IntelliJ IDE](https://www.jetbrains.com/idea/download/#section=mac) to aid our development
-   activities.
+   activities for this tutorial. If this is not your preferred IDE then you can use other IDEs like Eclipse, Visual Studio, etc.      
 4. An
    [Azure supported Java Development Kit (JDK)](https://learn.microsoft.com/en-us/azure/developer/java/fundamentals/java-support-on-azure)
    for Java, version 8 or 11.
-5. Basic understand of JAVA programming language.
+5. Basic understanding of JAVA programming language.
 
-## Serverless function : Hello World!
+## Serverless function: Hello World!
 
-Getting started with Azure serverless function is very simple, thanks to the Azure IntelliJ
-plugin which offers various feature from generating boilerplate code to deployment of Azure
-function. So before we jump into actual code lets intsall the plugin.
+Getting started with the Azure serverless function is very simple, thanks to the Azure IntelliJ plugin which offers various features from generating
+boilerplate code to the deployment of the Azure function. So before we jump into actual code let's install the plugin.
 
 ### Installing the Azure plugin
 
-Azure plugin can be installed on IntelliJ in a very standard manner using IntelliJ plugin
+Azure plugin can be installed on IntelliJ in a very standard manner using the IntelliJ plugin
 manager. So open Plugins and then search for "_Azure Toolkit for IntelliJ_" in the Marketplace
 and click Install.
 
 ![IntelliJ Plugin](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/marketplace_ecdaa3a97e.png)
 
-With this we are ready to create our first Azure function.
+With this, we are ready to create our first Azure function.
 
 ### First Azure function
 
@@ -46,28 +51,27 @@ Now we can edit the project details if needed, or you can leave them to default.
 
 ![New Project Wizard Azure function](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Auzre_Function_Create_new_Project_2_de20e0e545.png)
 
-At the last step, update name of the project and location. 
+In the last step, update name of the project and location. 
 
 ![New Project Wizard Create](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Auzre_Function_Create_new_Project_3_c997b16796.png)
 
 With this complete, we have a bootstrapped project with sample function implementation so without
-further ado let run this and see this in action.
+further ado let's run this and see this in action.
 
 ![Project structure](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Project_Structure_8b2e29a477.png)
 
 ### Deploying & running
 
-We can deploy Azure function either locally or on cloud, for now let's start by deploying
-it on local. To deploy and run locally press play icon against the function name, on line 20
-as shown in above screenshot, and select run from the dialog.
+We can deploy the Azure function either locally or on the cloud, let's start by deploying it locally. To deploy and run locally press the play icon
+against the function name, on line 20 as shown in the above screenshot, and select run from the dialogue.
 
 ![Hello World output console](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Azure_function_Runing_output_773708fed1.png)
 
-Now go ahead and copy the URL shown in console log and open in browser to run the azure function.
+Now go ahead and copy the URL shown in the console log and open it in the browser to run the azure function.
 
 ![Hello World output error](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Azure_Function_Hello_Output_2_ece7024552.png)
 
-This would prompt for passing name as query parameter as defined in the bootstrapped function.
+This would prompt passing the name as a query parameter as defined in the bootstrapped function.
 
 ```kotlin
 if (name == null) {
@@ -78,7 +82,7 @@ if (name == null) {
 }
 ```
 
-So update URL by appending the query parameter `name` to
+So update the URL by appending the query parameter `name` to
 `http://localhost:XXXXX/api/HttpExample?name=World` which would print the desired result.
 
 ![Hello World output](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Azure_function_Hello_World_output_3_9fb2d86cb0.png)
@@ -88,30 +92,25 @@ To learn more in detail you can also follow this official
 
 ## Connecting serverless function with MongoDB Atlas
 
-In the previous step we created our first Azure function which take a user input and print it
-on screen but real world application far complicate than this. In order to create a real world
-function, which we would do in the next section, we need to understand how to connect our
-function with a database, as logic operate over data and databases hold the data.
+In the previous step, we created our first Azure function which takes user input and prints it on screen but real-world applications are far more
+complicated than this. In order to create a real-world function, which we would do in the next section, we need to understand how to connect our 
+function with a database, as logic operates over data and databases hold the data.
 
-Similar to serverless function, let use a database which is on cloud has the ability scale up
-and down with the needs. Therefore, we would be using [MongoDB Atlas](https://www.mongodb.com/atlas/database)
-which is a document based cloud database.
+Similar to serverless function, let's use a database which is also on the cloud and has the ability to scale up and down with the needs. Therefore,
+we would be using [MongoDB Atlas](https://www.mongodb.com/atlas/database) which is a document-based cloud database.
 
 ### Setting up Atlas account
 
 Creating an [Atlas account](https://www.mongodb.com/cloud/atlas/register) is very straightforward, which is free forever and perfect to validate
-any MVP project idea, but if you need a guide you can follow this
-[documentation](https://www.mongodb.com/docs/atlas/getting-started/).
+any MVP project idea, but if you need a guide you can follow this [documentation](https://www.mongodb.com/docs/atlas/getting-started/).
 
-### Whitelisting Azure function IP address in Atlas
+### Adding Azure function IP address in Atlas Network Config
 
-One of the step while creating an account with Atlas is to whitelist the IP address for incoming
-connection request, this is essential as it prevent unwanted access to our database. In our case
-Atlas would get all the connect request from Azure function so let whitelist those IP addresses.
+One of the steps while creating an account with [Atlas](https://www.mongodb.com/atlas/database) is to add an IP address for accepting incoming connection requests, this is essential to
+prevent unwanted access to our database. In our case, Atlas would get all the connection requests from the Azure function so let's add those addresses.
 
-Azure function uses a range of IP addresses instead of single address for outbound request, so
-let's add this range to Atlas. To get the range of IP address open your [Azure account](https://azure.microsoft.com/en-us/free/) and
-search networking inside your Azure Virtual machine and copy the Outbound addresses from
+Azure function uses multiple IP addresses instead of single address, so let's add these to Atlas. To get the range of IP address open your
+[Azure account](https://azure.microsoft.com/en-us/free/) and search networking inside your Azure Virtual machine and copy the Outbound addresses from
 Outbound traffic.
 
 ![Auzre IP address](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Auzre_IP_addres_cf5a3f9897.png)
@@ -122,9 +121,8 @@ And add these to IP individually under Network Access.
 
 ### Installing dependency to interact with Atlas
 
-There are various ways of connecting/interacting with Atlas, since we are building a service
-using serverless function in Java my preference would be use [MongoDB Java driver](https://www.mongodb.com/docs/drivers/java-drivers/)
-. So let add the dependency for the driver in the `build.gradle` file.
+There are various ways of interacting with Atlas, since we are building a service using a serverless function in Java my preference would be to use
+[MongoDB Java driver](https://www.mongodb.com/docs/drivers/java-drivers/). So let's add the dependency for the driver in the `build.gradle` file.
 
 ```groovy
 dependencies {
@@ -134,16 +132,16 @@ dependencies {
 }
 ```
 
-With this our project is ready to connect and interact with our cloud database.
+With this, our project is ready to connect and interact with our cloud database.
 
 ## Building an Azure function with Atlas
 
-With all prerequisite done, lets build our first real world function using [MongoDB sample
-dataset](https://www.mongodb.com/docs/atlas/sample-data/) for movies. In this project we would be building two functions one return count of
-total movies in the collection and other would return movie document based on the year of release.
+With all prerequisites done, let us build our first real-world function using the [MongoDB sample
+dataset](https://www.mongodb.com/docs/atlas/sample-data/)for movies. In this project, we would be building two functions one returns the count of the
+total movies in the collection and the other would return the movie document based on the year of release.
 
 So let's generate the boilerplate code for the function by right-clicking on the package name
-and then select New > Azure function class, we would be calling this function class as `Movies`.
+and then selecting New > Azure function class, we would be calling this function class as `Movies`.
 
 ```java
 public class Movies {
@@ -171,7 +169,7 @@ public class Movies {
 }
 ```
 
-Now lets update the
+Now let us update the
 
 1. `@FunctionName` parameter from `Movies` to `getMoviesCount`.
 2. Rename the function name from `run` to `getMoviesCount`.
@@ -193,9 +191,9 @@ public class Movies {
 }
 ```
 
-Now to connect with MongoDB Atlas using Java driver we first need a connection string that can
-found when we press connect to our cluster on our [Atlas account](https://account.mongodb.com/account/login?_ga=2.197766374.89042088.1678230173-713092659.1675961706)
-, for details you can also refer to this [documentation](https://www.mongodb.com/docs/guides/atlas/connection-string/).
+Now to connect with MongoDB Atlas using Java driver we first need a connection string that can be found when we press to connect to our cluster on our
+[Atlas account](https://account.mongodb.com/account/login?_ga=2.197766374.89042088.1678230173-713092659.1675961706), for details you can also refer 
+to this [documentation](https://www.mongodb.com/docs/guides/atlas/connection-string/).
 
 ![Screenshot connection URL](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Connection_URI_fd9907e2bd.png)
 
@@ -235,13 +233,13 @@ public class Movies {
 }
 ```
 
- We can query our database for total number of movies in the collection as shown below.
+We can query our database for the total number of movies in the collection as shown below.
 
 ```java
 long totalRecords=database.getCollection(COLLECTION_NAME).countDocuments();
 ```
 
-And updated code for `getMoviesCount` function look like this.
+And updated code for `getMoviesCount` the function looks like this.
 
 ```java
 @FunctionName("getMoviesCount")
@@ -261,21 +259,21 @@ public HttpResponseMessage getMoviesCount(
 }
 ```
 
-Now let's deploy this code locally and on cloud to validate the output and would be using
+Now let's deploy this code locally and on the cloud to validate the output and would be using
 [Postman](https://www.postman.com/).
 
 ![local deployment](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Azure_function_get_Movie_Count_Build_ce2554944c.png)
 
-Now copy the url from console output and paste it on postman to validate the output.
+Now copy the URL from the console output and paste it on the postman to validate the output.
 
 ![local postman output](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Auzre_function_Get_Movie_Postman_fa39cbf603.png)
 
-Now let's deploy this on Azure cloud using `Linux` machine. So click on `Azure Explore` and select Functions App to 
+Now let's deploy this on Azure cloud on a `Linux` machine. So click on `Azure Explore` and select Functions App to 
 create a Virtual machine (VM).
 
 ![Azure explore](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Cloud_deploy_1_4bc140b0a5.png)
 
-Now right click on Azure function and select create.
+Now right-click on the Azure function and select create.
 
 ![create new VM](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/cloud_deploy_2_d51c469b0f.png)
 
@@ -283,7 +281,7 @@ Now change the platform to `Linux` with `Java 1.8`
 
 ![create vm with linux](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/cloud_deply_3_c60bba1b7c.png)
 
-After few minutes you would notice the VM we just create under `Function App`, now we can deploy
+After a few minutes, you would notice the VM we just created under `Function App`, now we can deploy
 our app onto it.
 
 ![vm deploy](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/cloud_deploy_4_9a01d01ac1.png)
@@ -318,8 +316,7 @@ public HttpResponseMessage getMoviesByYear(
 
 }
 ```
-Now to capture user input, year of the movie was released that would be used query and gather 
-information from the collection.   
+Now to capture user input year that would be used to query and gather information from the collection. 
 
 ```java
 final int yearRequestParam = valueOf(request.getQueryParameters().get("year"));
@@ -360,6 +357,14 @@ Now lets validate this against postman.
 ## Summary
 Thank you for reading, hopefully you find this article informative! The complete source code of
 the app can be found on [GitHub](https://github.com/mongodb-developer/starter-azure-function-mongodb).
+
+If you're looking for something similar using the Node.js runtime, check out this other
+[tutorial](https://techcommunity.microsoft.com/t5/apps-on-azure-blog/getting-started-with-mongodb-atlas-and-azure-functions-using/ba-p/3662099) on the
+subject.
+
+With MongoDB Atlas on Microsoft Azure , developers receive access to the most comprehensive, secure, scalable, and cloud–based developer data platform
+in the market. Now, with the availability of Atlas on the Azure Marketplace, it’s never been easier for users to start building with Atlas while
+streamlining procurement and billing processes. Get started today through the Atlas on Azure Marketplace listing.
 
 If you have any queries or comments, you can share them on the [MongoDB forum](https://www.mongodb.com/community/forums/) 
 or tweet me [@codeWithMohit](https://twitter.com/codeWithMohit).
