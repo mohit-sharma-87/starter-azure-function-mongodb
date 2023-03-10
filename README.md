@@ -351,6 +351,37 @@ Now lets validate this against postman.
 
 ![get movies by year output](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Screenshot_2023_03_07_at_22_54_16_81d42caa18.png)
 
+Last step in making our app production ready is to secure the connection `URI`, as it contain credentials and should be kept private.  One of ways 
+of securing it could be storing this into environment variable. 
+
+Adding environment variable in Azure function can be done via Azure portal and Azure IntelliJ plugin as well. For now, we would be using Azure 
+IntelliJ Plugin, so go ahead and open Azure Explore in IntelliJ. 
+
+![Azure Explore](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Azure_Explore_1_c80c9dadc0.png)
+
+And then we select `Function App` and after right click select `Show Properties`.
+
+![Azure Explore VM property](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Azure_Explore_2_231c7f95b8.png)
+
+This would open a tab with all existing properties, we add our property into it.   
+
+![Azure Explore](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Azure_Explore_3_c6fe2182b9.png)
+
+Now we can update our function code to use this variable. 
+
+From 
+
+```java
+private static final String MONGODB_CONNECTION_URI = "mongodb+srv://xxxxx:xxxx@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority";
+```
+to 
+
+```java
+private static final String MONGODB_CONNECTION_URI = System.getenv("MongoDB_Connection_URL");
+```
+
+After redeploying the code, we are all set to use this app in production. 
+
 ## Summary
 Thank you for reading, hopefully you find this article informative! The complete source code of
 the app can be found on [GitHub](https://github.com/mongodb-developer/starter-azure-function-mongodb).
