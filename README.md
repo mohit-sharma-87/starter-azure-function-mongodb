@@ -318,6 +318,7 @@ Now to capture user input year that would be used to query and gather informatio
 ```java
 final int yearRequestParam = valueOf(request.getQueryParameters().get("year"));
 ```
+To use this information for querying, we create a `Filters` object that can passed as input for `find` function.   
 
 ```java
 Bson filter = Filters.eq("year", yearRequestParam);
