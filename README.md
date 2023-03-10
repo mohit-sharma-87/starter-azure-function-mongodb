@@ -1,28 +1,27 @@
-# How to use Azure function with MongoDB Atlas in Java
+# How to use Azure functions with MongoDB Atlas in Java
 
 > In this article we will learn how to use [MongoDB atlas](https://www.mongodb.com/atlas/database), a cloud database,
-> when you are getting started with [Azure function](https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview) 
+> when you are getting started with [Azure functions](https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview) 
 > in Java.
 
 ## Introduction
-Cloud computing is one of the most discussed topics in the tech industry with its ability to scale up and down infrastructure instantly, serverless
+
+Cloud computing is one of the most discussed topics in the tech industry. Its ability to scale up and down infrastructure instantly, serverless
 apps are just a few benefits to start with. In this article, we are going write the function as a service(FaaS)e i.e. serverless function that 
 would interact with data via a database to produce meaningful results.    
 
-## Prerequisite
+## Prerequisites
 
 1. [Microsoft Azure](https://azure.microsoft.com/en-us) account that we will be
-   using for running and deploying our serverless function, if you don't have you can set it up for
-   free.
-
-2. [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register) account, which is cloud based document database and can be set up for free. 
-
-3. [IntelliJ IDE](https://www.jetbrains.com/idea/download/#section=mac) to aid our development
+   using for running and deploying our serverless function, if you don't have one you can sign up for free.
+2. [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register) account which is a cloud based document database, and you can sign up for an account
+for free. 
+3. [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/download/)  to aid our development
    activities for this tutorial. If this is not your preferred IDE then you can use other IDEs like Eclipse, Visual Studio, etc.      
 4. An
    [Azure supported Java Development Kit (JDK)](https://learn.microsoft.com/en-us/azure/developer/java/fundamentals/java-support-on-azure)
    for Java, version 8 or 11.
-5. Basic understanding of JAVA programming language.
+5. Basic understanding of Java programming language.
 
 ## Serverless function: Hello World!
 
@@ -55,8 +54,8 @@ In the last step, update name of the project and location.
 
 ![New Project Wizard Create](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Auzre_Function_Create_new_Project_3_c997b16796.png)
 
-With this complete, we have a bootstrapped project with sample function implementation so without
-further ado let's run this and see this in action.
+With this complete, we have a bootstrapped project with a sample function implementation. So without
+further ado let's run this and see it in action.
 
 ![Project structure](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Project_Structure_8b2e29a477.png)
 
@@ -92,9 +91,9 @@ To learn more in detail you can also follow this official
 
 ## Connecting serverless function with MongoDB Atlas
 
-In the previous step, we created our first Azure function which takes user input and prints it on screen but real-world applications are far more
-complicated than this. In order to create a real-world function, which we would do in the next section, we need to understand how to connect our 
-function with a database, as logic operates over data and databases hold the data.
+In the previous step, we created our first Azure function which takes user input and returns a result but real-world 
+applications are far more complicated than this. In order to create a real-world function, which we would do in the next section, we need to 
+understand how to connect our function with a database, as logic operates over data and databases hold the data.
 
 Similar to serverless function, let's use a database which is also on the cloud and has the ability to scale up and down with the needs. Therefore,
 we would be using [MongoDB Atlas](https://www.mongodb.com/atlas/database) which is a document-based cloud database.
@@ -106,14 +105,15 @@ any MVP project idea, but if you need a guide you can follow this [documentation
 
 ### Adding Azure function IP address in Atlas Network Config
 
-One of the steps while creating an account with [Atlas](https://www.mongodb.com/atlas/database) is to add an IP address for accepting incoming connection requests, this is essential to
-prevent unwanted access to our database. In our case, Atlas would get all the connection requests from the Azure function so let's add those addresses.
-
 Azure function uses multiple IP addresses instead of single address, so let's add these to Atlas. To get the range of IP address open your
 [Azure account](https://azure.microsoft.com/en-us/free/) and search networking inside your Azure Virtual machine and copy the Outbound addresses from
 Outbound traffic.
 
-![Auzre IP address](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Auzre_IP_addres_cf5a3f9897.png)
+One of the steps while creating an account with [Atlas](https://www.mongodb.com/atlas/database) is to add the IP address for accepting incoming 
+connection requests. This is essential to prevent unwanted access to our database. In our case, Atlas would get all the connection requests from the
+Azure function so let's add this addresses.
+
+![Azure IP address](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Auzre_IP_addres_cf5a3f9897.png)
 
 And add these to IP individually under Network Access. 
 
@@ -181,7 +181,7 @@ So our update code looks like this.
 public class Movies {
 
     @FunctionName("getMoviesCount")
-    public HttpResponseMessage run(
+    public HttpResponseMessage getMoviesCount(
             @HttpTrigger(name = "req", methods = {HttpMethod.GET, HttpMethod.POST}, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
         context.getLogger().info("Java HTTP trigger processed a request.");
@@ -198,10 +198,9 @@ to this [documentation](https://www.mongodb.com/docs/guides/atlas/connection-str
 ![Screenshot connection URL](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Connection_URI_fd9907e2bd.png)
 
 Using the connection string we can create an instance of `MongoClients` that can be used to open connection
-from the database.
+from the `database`.
 
 ```java
-
 public class Movies {
 
     private static final String MONGODB_CONNECTION_URI = "mongodb+srv://xxxxx@cluster0.xxxx.mongodb.net/?retryWrites=true&w=majority";
@@ -220,16 +219,15 @@ public class Movies {
         }
         return database;
     }
-
-
-    @FunctionName("getMoviesCount")
+    
+    /*@FunctionName("getMoviesCount")
     public HttpResponseMessage run(
             @HttpTrigger(name = "req", methods = {HttpMethod.GET, HttpMethod.POST}, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
         context.getLogger().info("Java HTTP trigger processed a request.");
 
         return request.createResponseBuilder(HttpStatus.OK).body("Hello").build();
-    }
+    }*/
 }
 ```
 
@@ -302,10 +300,9 @@ With this we have successfully connected our first function with
 [MongoDB Atlas](https://www.mongodb.com/atlas/database). Now lets take to next level, we would
 create another function that returns a movie document based on the year of release. 
 
-So lets added the boiler code again  
+so let's add the boilerplate code again  
 
 ```java
-
 @FunctionName("getMoviesByYear")
 public HttpResponseMessage getMoviesByYear(
       @HttpTrigger(name = "req",
@@ -368,5 +365,3 @@ streamlining procurement and billing processes. Get started today through the At
 
 If you have any queries or comments, you can share them on the [MongoDB forum](https://www.mongodb.com/community/forums/) 
 or tweet me [@codeWithMohit](https://twitter.com/codeWithMohit).
-
-
