@@ -16,7 +16,7 @@ release quickly an independent function without going into actual implementation
 2. [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register) account which is a cloud based document database, and you can sign up for an account
 for free. 
 3. [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/download/)  to aid our development
-   activities for this tutorial. If this is not your preferred IDE then you can use other IDEs like Eclipse, Visual Studio, etc.      
+   activities for this tutorial. If this is not your preferred IDE then you can use other IDEs like Eclipse, Visual Studio, etc., but the steps will be slightly different.
 4. An
    [Azure supported Java Development Kit (JDK)](https://learn.microsoft.com/en-us/azure/developer/java/fundamentals/java-support-on-azure)
    for Java, version 8 or 11.
@@ -30,7 +30,7 @@ boilerplate code to the deployment of the Azure function. So before we jump into
 ### Installing the Azure plugin
 
 Azure plugin can be installed on IntelliJ in a very standard manner using the IntelliJ plugin
-manager. So open Plugins and then search for "_Azure Toolkit for IntelliJ_" in the Marketplace
+manager. So open Plugins and then search for "_[Azure Toolkit for IntelliJ](https://plugins.jetbrains.com/plugin/8053-azure-toolkit-for-intellij)_" in the Marketplace
 and click Install.
 
 ![IntelliJ Plugin](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/marketplace_ecdaa3a97e.png)
@@ -116,7 +116,7 @@ Azure function so let's add this addresses.
 
 And add these to IP individually under Network Access. 
 
-![MongoDB IP whitelist](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Whitelist_IP_address_900cd90939.png)
+![MongoDB IP Allow List](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/Whitelist_IP_address_900cd90939.png)
 
 ### Installing dependency to interact with Atlas
 
