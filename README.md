@@ -1,14 +1,13 @@
 # How to use Azure functions with MongoDB Atlas in Java
 
-> In this article we will learn how to use [MongoDB atlas](https://www.mongodb.com/atlas/database), a cloud database,
-> when you are getting started with [Azure functions](https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview) 
-> in Java.
-
-## Introduction
-
 Cloud computing is one of the most discussed topics in the tech industry. Its ability to scale up and down infrastructure instantly, serverless
 apps are just a few benefits to start with. In this article, we are going write the function as a service(FaaS)e i.e. serverless function that 
-would interact with data via a database to produce meaningful results.    
+would interact with data via a database to produce meaningful results. FaaS can be also very useful in A/B testing where you want to 
+release quickly an independent function without going into actual implementation or release.     
+
+> In this article we will learn how to use [MongoDB atlas](https://www.mongodb.com/atlas/database), a cloud database,
+> when you are getting started with [Azure functions](https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview)
+> in Java.
 
 ## Prerequisites
 
@@ -72,7 +71,7 @@ Now go ahead and copy the URL shown in the console log and open it in the browse
 
 This would prompt passing the name as a query parameter as defined in the bootstrapped function.
 
-```kotlin
+```java
 if (name == null) {
     return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
         .body("Please pass a name on the query string or in the request body").build();
@@ -100,7 +99,7 @@ we would be using [MongoDB Atlas](https://www.mongodb.com/atlas/database) which 
 
 ### Setting up Atlas account
 
-Creating an [Atlas account](https://www.mongodb.com/cloud/atlas/register) is very straightforward, which is free forever and perfect to validate
+Creating an [Atlas account](https://www.mongodb.com/cloud/atlas/register) is very straightforward, free forever and perfect to validate
 any MVP project idea, but if you need a guide you can follow this [documentation](https://www.mongodb.com/docs/atlas/getting-started/).
 
 ### Adding Azure function IP address in Atlas Network Config
