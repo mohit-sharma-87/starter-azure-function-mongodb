@@ -1,5 +1,7 @@
 # How to use Azure functions with MongoDB Atlas in Java
 
+![Cover image](https://www.mongodb.com/developer/_next/image/?url=https%3A%2F%2Fmongodb-devhub-cms.s3.us-west-1.amazonaws.com%2FFB_LI_TW_1200x628_1e03d65709.png&w=3840&q=75)
+
 Cloud computing is one of the most discussed topics in the tech industry. Its ability to scale up and down infrastructure instantly, serverless
 apps are just a few benefits to start with. In this article, we are going write the function as a service(FaaS)e i.e. serverless function that 
 would interact with data via a database to produce meaningful results. FaaS can be also very useful in A/B testing where you want to 
