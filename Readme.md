@@ -278,6 +278,11 @@ Now change the platform to `Linux` with `Java 1.8`
 
 ![create vm with linux](https://mongodb-devhub-cms.s3.us-west-1.amazonaws.com/cloud_deply_3_c60bba1b7c.png)
 
+> If for some reason you don't want to change the platform and would like use Window OS, then add standard DNS route before making a network request.
+> ```java 
+> System.setProperty("java.naming.provider.url", "dns://8.8.8.8"); 
+> ```
+
 After a few minutes, you would notice the VM we just created under `Function App`, now we can deploy
 our app onto it.
 
@@ -380,7 +385,7 @@ to
 private static final String MONGODB_CONNECTION_URI = System.getenv("MongoDB_Connection_URL");
 ```
 
-After redeploying the code, we are all set to use this app in production. 
+After redeploying the code, we are all set to use this app in production.
 
 ## Summary
 Thank you for reading, hopefully you find this article informative! The complete source code of
